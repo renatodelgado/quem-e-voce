@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 // screens/Home.tsx
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { AnimatePresence, MotiView } from 'moti';
 import { CalendarDots, GenderIntersex, GlobeHemisphereWest, Sparkle, User } from 'phosphor-react-native';
 import React, { useEffect, useState } from 'react';
@@ -23,8 +25,6 @@ export default function Home() {
   const [result, setResult] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
-  const params = useLocalSearchParams();
-  const router = useRouter();
 const { autoSearch, reuseName } = useLocalSearchParams();
 const { selectedName, timestamp } = useLocalSearchParams();
 
@@ -120,7 +120,7 @@ useEffect(() => {
         tryCache();
       }, 100);
     }
-  }, [selectedName, timestamp]);
+  }, [revealDestiny, selectedName, timestamp]);
 
   const getFlag = (code: string) => {
     if (!code || code.length !== 2) return '🌍';
@@ -282,7 +282,7 @@ useEffect(() => {
                       <Text style={globalStyles.oracleText}>
                         Seu nome ecoa com força em terras distantes... especialmente em:
                       </Text>
-                      {result.country.slice(0, 5).map((c: any, i: number) => (
+                      {result.country.slice(0, 5).map((c: any) => (
                         <View key={c.country_id} style={{ flexDirection: 'row', alignItems: 'center', marginTop: 12 }}>
                           <Text style={{ fontSize: 28, marginRight: 12 }}>{getFlag(c.country_id)}</Text>
                           <Text style={globalStyles.countryText}>

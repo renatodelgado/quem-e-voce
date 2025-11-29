@@ -22,6 +22,7 @@ export default function Historico() {
           } else {
             setHistory([]);
           }
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           setHistory([]);
         }

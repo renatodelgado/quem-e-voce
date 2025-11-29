@@ -32,7 +32,7 @@ export default function Sobre() {
             <View style={globalStyles.aboutCard}>
               <Text style={globalStyles.aboutTitle}>O Projeto</Text>
               <Text style={globalStyles.aboutText}>
-                &quot;Quem é você&quot; é um oráculo digital criado por <Text style={globalStyles.highlight}>Renato Delgado</Text> para a disciplina Coding Mobile da Faculdade Senac-PE, ministrada pelo prof. Geraldo Júnior.
+                &quot;Quem é você?&quot; é um oráculo digital criado por <Text style={globalStyles.highlight}>Renato Delgado</Text> para a disciplina Coding Mobile da Faculdade Senac-PE, ministrada pelo prof. Geraldo Júnior.
               </Text>
               <Text style={globalStyles.aboutText}>
                 Este app demonstra o poder de combinar fontes públicas de dados para revelar segredos escondidos em um simples nome.
