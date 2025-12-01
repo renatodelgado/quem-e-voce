@@ -90,7 +90,7 @@ export default function Results({ name, data }: ResultsProps) {
   );
 }
 
-// FUNÇÃO PERFEITA: Bandeira de qualquer país do mundo
+// FUNÇÃO PERFEITA
 const getFlag = (code: string) => {
   if (!code || code.length !== 2) return 'Globe';
   return String.fromCodePoint(...[...code.toUpperCase()].map(c => 127397 + c.charCodeAt(0)));

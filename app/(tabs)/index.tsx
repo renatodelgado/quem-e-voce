@@ -5,7 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams } from 'expo-router';
 import { AnimatePresence, MotiView } from 'moti';
 import { CalendarDotsIcon, GenderIntersexIcon, GlobeHemisphereWestIcon, SparkleIcon, UserIcon } from 'phosphor-react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import {
   Alert,
   SafeAreaView,
@@ -36,8 +36,8 @@ export default function Home() {
     "Os ventos antigos trazem respostas...",
   ];
 
-  async function revealDestiny() {
-    const trimmed = name.trim();
+  const revealDestiny = useCallback(async (nameToReveal: string) => {
+    const trimmed = (nameToReveal || '').trim();
     if (!trimmed) return;
 
     setIsLoading(true);
@@ -81,7 +81,7 @@ export default function Home() {
       clearInterval(interval);
       setIsLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
     if (selectedName && typeof selectedName === 'string') {
@@ -106,13 +106,13 @@ export default function Home() {
           } catch { }
 
           setIsLoading(true);
-          setTimeout(() => revealDestiny(), 400);
+          setTimeout(() => revealDestiny(selectedName), 400);
         };
 
         tryCache();
       }, 100);
     }
-  }, [revealDestiny, selectedName, timestamp]);
+  }, [selectedName, timestamp]);
 
   const getFlag = (code: string) => {
     if (!code || code.length !== 2) return '🌍';
@@ -213,7 +213,7 @@ export default function Home() {
             </View>
 
             {/* BOTÃO COM BRILHO */}
-            <TouchableOpacity onPress={revealDestiny} disabled={isLoading || !name.trim()}>
+            <TouchableOpacity onPress={() => revealDestiny(name)} disabled={isLoading || !name.trim()}>
               <LinearGradient
                 colors={name.trim() && !isLoading ? ['#C084FC', '#7C3AED'] : ['#555', '#777']}
                 style={globalStyles.buttonAlt}
