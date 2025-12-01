@@ -1,50 +1,81 @@
-# Welcome to your Expo app 👋
+# Quem é você?
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+> Um oráculo digital que estima idade, gênero e possíveis países de origem a partir de um nome.
 
-## Get started
+Aplicativo criado por Renato Delgado como projeto para a disciplina *Coding Mobile* (FacSenac-PE). O app demonstra integração com APIs públicas, animações, armazenamento local e fluxo de navegação em abas usando `expo-router`.
 
-1. Install dependencies
+---
 
-   ```bash
-   npm install
-   ```
+**Principais objetivos**
+- **Didático:** mostrar integração de serviços externos (APIs) em um app móvel com React Native + Expo.
+- **Prático:** interface animada e experiência de usuário refinada (Moti, gradientes, ícones).
+- **Privacidade:** histórico e cache salvos apenas localmente via `AsyncStorage`.
 
-2. Start the app
+**Tecnologias**
+- **React Native** + **Expo** (gerenciamento e builds)
+- **TypeScript**
+- **expo-router** (navegação de tabs)
+- **Moti** (animações)
+- **phosphor-react-native** (ícones)
+- **expo-linear-gradient** (gradientes)
+- **@react-native-async-storage/async-storage** (cache e histórico)
+- **EAS** (opcional — builds na nuvem)
 
-   ```bash
-   npx expo start
-   ```
+---
 
-In the output, you'll find options to open the app in a
+# Estrutura do Projeto
+```
+root/
+ ├── app/
+ │   ├── (tabs) 
+ |   |   ├──_layout.tsx
+ |   |   ├──historico.tsx
+ |   |   └──index.tsx
+ │   └── _layout_.tsx
+ └── services/
+     └── getNameInfo.ts
+```
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+# Preview do App
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Coloque suas capturas de tela na pasta `/screenshots/`.
+Abaixo estão os espaços reservados:
 
-## Get a fresh project
+### Home
+<img src="./screenshots/home.jpg" width="300" />
 
-When you're ready, run:
+<img src="./screenshots/home_output.jpg" width="300" />
 
+### Histórico de Pesquisas
+<img src="./screenshots/history.jpg" width="300" />
+
+### Sobre o App
+<img src="./screenshots/about.jpg" width="300" />
+
+---
+
+## Como Rodar o Projeto
+
+### 1. Instale as dependências globais:
 ```bash
-npm run reset-project
+npm install --global expo-cli
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+### 2. Instale as dependências do projeto:
+```bash
+npm install
+```
 
-## Learn more
+### 3. Execute o app:
+```bash
+npx expo start
+```
 
-To learn more about developing your project with Expo, look at the following resources:
+Use o **Expo Go** no celular ou um emulador Android/iOS para visualizar.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+---
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+## Contato
+- Autor: Renato Delgado
+- Email: renato.delgado@edu.pe.senac.br / rena7o.delgado@gmail.com

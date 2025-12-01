@@ -1,6 +1,5 @@
-// app/(tabs)/_layout.tsx
 import { Tabs } from 'expo-router';
-import { ClockCounterClockwise, House, Info } from 'phosphor-react-native';
+import { ClockCounterClockwiseIcon, HouseIcon, InfoIcon } from 'phosphor-react-native';
 
 export default function TabLayout() {
   return (
@@ -10,12 +9,12 @@ export default function TabLayout() {
         tabBarActiveTintColor: '#E0AAFF',
         tabBarInactiveTintColor: '#9999BB',
         tabBarStyle: {
-          backgroundColor: 'rgba(76, 29, 149, 0.6)',   // roxo translúcido suave
+          backgroundColor: 'rgba(76, 29, 149, 0.6)',
           borderTopWidth: 0,
           height: 78,
           paddingBottom: 18,
           paddingTop: 10,
-          backdropFilter: 'blur(10px)',               // efeito vidro fosco (iOS/Android 12+)
+          backdropFilter: 'blur(10px)',
         },
         tabBarLabelStyle: {
           fontSize: 11,
@@ -32,7 +31,7 @@ export default function TabLayout() {
         options={{
           title: "Oráculo",
           tabBarIcon: ({ focused }) => (
-            <House
+            <HouseIcon
               size={28}
               weight={focused ? 'fill' : 'regular'}
               color={focused ? '#E0AAFF' : '#CCCCDD'}
@@ -46,7 +45,7 @@ export default function TabLayout() {
         options={{
           title: "Revelados",
           tabBarIcon: ({ focused }) => (
-            <ClockCounterClockwise
+            <ClockCounterClockwiseIcon
               size={28}
               weight={focused ? 'fill' : 'regular'}
               color={focused ? '#E0AAFF' : '#CCCCDD'}
@@ -60,7 +59,7 @@ export default function TabLayout() {
         options={{
           title: "Véu do Tempo",
           tabBarIcon: ({ focused }) => (
-            <Info
+            <InfoIcon
               size={28}
               weight={focused ? 'fill' : 'regular'}
               color={focused ? '#E0AAFF' : '#CCCCDD'}

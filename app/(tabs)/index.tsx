@@ -1,11 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-// screens/Home.tsx
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useLocalSearchParams } from 'expo-router';
 import { AnimatePresence, MotiView } from 'moti';
-import { CalendarDots, GenderIntersex, GlobeHemisphereWest, Sparkle, User } from 'phosphor-react-native';
+import { CalendarDotsIcon, GenderIntersexIcon, GlobeHemisphereWestIcon, SparkleIcon, UserIcon } from 'phosphor-react-native';
 import React, { useEffect, useState } from 'react';
 import {
   Alert,
@@ -25,8 +24,8 @@ export default function Home() {
   const [result, setResult] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState('');
-const { autoSearch, reuseName } = useLocalSearchParams();
-const { selectedName, timestamp } = useLocalSearchParams();
+  const { autoSearch, reuseName } = useLocalSearchParams();
+  const { selectedName, timestamp } = useLocalSearchParams();
 
   const mysticMessages = [
     "Os espíritos se aproximam...",
@@ -37,68 +36,62 @@ const { selectedName, timestamp } = useLocalSearchParams();
     "Os ventos antigos trazem respostas...",
   ];
 
-async function revealDestiny() {
-  const trimmed = name.trim();
-  if (!trimmed) return;
+  async function revealDestiny() {
+    const trimmed = name.trim();
+    if (!trimmed) return;
 
-  setIsLoading(true);
-  setResult(null);
+    setIsLoading(true);
+    setResult(null);
 
-  let i = 0;
-  const interval = setInterval(() => {
-    setLoadingMessage(mysticMessages[i % mysticMessages.length]);
-    i++;
-  }, 2000);
+    let i = 0;
+    const interval = setInterval(() => {
+      setLoadingMessage(mysticMessages[i % mysticMessages.length]);
+      i++;
+    }, 2000);
 
-  try {
-    const data = await getNameInfo(trimmed);
+    try {
+      const data = await getNameInfo(trimmed);
 
-    if (data && (data.age || data.gender || (data.country && data.country.length > 0))) {
-      setResult({ name: trimmed, ...data });
+      if (data && (data.age || data.gender || (data.country && data.country.length > 0))) {
+        setResult({ name: trimmed, ...data });
 
-      // cache the result for faster future lookups
-      try {
-        const rawCache = await AsyncStorage.getItem('name_cache');
-        const cache = rawCache ? JSON.parse(rawCache) : {};
-        cache[trimmed.toLowerCase()] = { age: data.age, gender: data.gender, country: data.country };
-        await AsyncStorage.setItem('name_cache', JSON.stringify(cache));
-      } catch (e) {
-        // ignore cache errors
+        try {
+          const rawCache = await AsyncStorage.getItem('name_cache');
+          const cache = rawCache ? JSON.parse(rawCache) : {};
+          cache[trimmed.toLowerCase()] = { age: data.age, gender: data.gender, country: data.country };
+          await AsyncStorage.setItem('name_cache', JSON.stringify(cache));
+        } catch (e) {
+        }
+
+        try {
+          const raw = await AsyncStorage.getItem('search_history');
+          const arr = raw ? JSON.parse(raw) as string[] : [];
+          const filtered = arr.filter((n) => n.toLowerCase() !== trimmed.toLowerCase());
+          filtered.unshift(trimmed);
+          const limited = filtered.slice(0, 50);
+          await AsyncStorage.setItem('search_history', JSON.stringify(limited));
+        } catch (e) {
+        }
+      } else {
+        setResult(null);
       }
-
-      // save history without duplicates
-      try {
-        const raw = await AsyncStorage.getItem('search_history');
-        const arr = raw ? JSON.parse(raw) as string[] : [];
-        const filtered = arr.filter((n) => n.toLowerCase() !== trimmed.toLowerCase());
-        filtered.unshift(trimmed);
-        const limited = filtered.slice(0, 50);
-        await AsyncStorage.setItem('search_history', JSON.stringify(limited));
-      } catch (e) {
-        // ignore storage errors
-      }
-    } else {
-      setResult(null);
+    } catch (e) {
+      Alert.alert('Erro', 'Não foi possível consultar os espíritos. Tente novamente mais tarde.');
+    } finally {
+      clearInterval(interval);
+      setIsLoading(false);
     }
-  } catch (e) {
-    Alert.alert('Erro', 'Não foi possível consultar os espíritos. Tente novamente mais tarde.');
-  } finally {
-    clearInterval(interval);
-    setIsLoading(false);
   }
-}
 
-useEffect(() => {
+  useEffect(() => {
     if (selectedName && typeof selectedName === 'string') {
       setName('');
       setResult(null);
       setIsLoading(false);
 
-      // Pequeno delay pra garantir limpeza total
       setTimeout(() => {
         setName(selectedName);
-        
-        // Primeiro tenta cache
+
         const tryCache = async () => {
           try {
             const raw = await AsyncStorage.getItem('name_cache');
@@ -110,13 +103,12 @@ useEffect(() => {
                 return;
               }
             }
-          } catch {}
-          
-          // Se não achou no cache, busca na API
+          } catch { }
+
           setIsLoading(true);
           setTimeout(() => revealDestiny(), 400);
         };
-        
+
         tryCache();
       }, 100);
     }
@@ -129,39 +121,47 @@ useEffect(() => {
 
   const getCountryName = (code: string) => {
     const map: Record<string, string> = {
-      BR: 'Brasil',         PT: 'Portugal',       US: 'Estados Unidos',  AR: 'Argentina',
-    MX: 'México',         ES: 'Espanha',        FR: 'França',          IT: 'Itália',
-    GB: 'Reino Unido',    DE: 'Alemanha',       JP: 'Japão',           CN: 'China',
-    RU: 'Rússia',         IN: 'Índia',          EG: 'Egito',           TR: 'Turquia',
-    SA: 'Arábia Saudita', CO: 'Colômbia',       MA: 'Marrocos',        CA: 'Canadá',
-    ZA: 'África do Sul',  DZ: 'Argélia',        NG: 'Nigéria',         NL: 'Países Baixos',
-    PE: 'Peru',           PL: 'Polônia',        BE: 'Bélgica',         TN: 'Tunísia',
-    ID: 'Indonésia',      AU: 'Austrália',      CL: 'Chile',           PH: 'Filipinas',
-    IL: 'Israel',         BD: 'Bangladesh',     CZ: 'Tchéquia',        SY: 'Síria',
-    YE: 'Iêmen',          OM: 'Omã',            CH: 'Suíça',           LY: 'Líbia',
-    SE: 'Suécia',         IR: 'Irã',            HK: 'Hong Kong',       KW: 'Kuwait',
-    KZ: 'Cazaquistão',    JO: 'Jordânia',       BO: 'Bolívia',         SG: 'Singapura',
-    QA: 'Catar',          IE: 'Irlanda',        PK: 'Paquistão',       RO: 'Romênia',
-    CM: 'Camarões',       AT: 'Áustria',        FI: 'Finlândia',       DK: 'Dinamarca',
-    LB: 'Líbano',         GR: 'Grécia',         HU: 'Hungria',         GT: 'Guatemala',
-    GH: 'Gana',           CR: 'Costa Rica',     VE: 'Venezuela',       NO: 'Noruega',
-    AE: 'Emirados',       UY: 'Uruguai',        TH: 'Tailândia',       PA: 'Panamá',
-    PS: 'Palestina',      EC: 'Equador',        UA: 'Ucrânia',         BH: 'Bahrein',
-    TW: 'Taiwan',         KE: 'Quênia',         NZ: 'Nova Zelândia',   VN: 'Vietnã',
-    RS: 'Sérvia',         HR: 'Croácia',        KR: 'Coreia do Sul',   AL: 'Albânia',
-    SK: 'Eslováquia',     DO: 'Rep. Dominicana',PR: 'Porto Rico',      UG: 'Uganda',
-    AZ: 'Azerbaijão',     LU: 'Luxemburgo',     CY: 'Chipre',          TZ: 'Tanzânia',
-    AO: 'Angola',         MD: 'Moldávia',       SN: 'Senegal',         LV: 'Letônia',
-    SI: 'Eslovênia',      ET: 'Etiópia',        IS: 'Islândia',        ZW: 'Zimbábue',
-    MK: 'Macedônia',      MM: 'Mianmar',        GE: 'Geórgia',         JM: 'Jamaica',
-    NA: 'Namíbia',        HT: 'Haiti',          BG: 'Bulgária',        KH: 'Camboja',
-    BW: 'Botsuana',       MN: 'Mongólia',       BI: 'Burundi',         LS: 'Lesoto',
-    TG: 'Togo',           FJ: 'Fiji',           MV: 'Maldivas',        SL: 'Serra Leoa',
-    LR: 'Libéria',        GW: 'Guiné-Bissau',   GQ: 'Guiné Equatorial',
-    CF: 'Rep. Centro-Africana',                 TD: 'Chade',           SO: 'Somália',
-    DJ: 'Djibuti',        MR: 'Mauritânia',     ML: 'Mali',            BF: 'Burkina Faso',
-    CG: 'Congo',          CD: 'Rep. Democrática do Congo',
-    NE: 'Níger',          RW: 'Ruanda',         ZM: 'Zâmbia',          MW: 'Malawi',
+      BR: 'Brasil', PT: 'Portugal', US: 'Estados Unidos', AR: 'Argentina',
+      MX: 'México', ES: 'Espanha', FR: 'França', IT: 'Itália',
+      GB: 'Reino Unido', DE: 'Alemanha', JP: 'Japão', CN: 'China',
+      RU: 'Rússia', IN: 'Índia', EG: 'Egito', TR: 'Turquia',
+      SA: 'Arábia Saudita', CO: 'Colômbia', MA: 'Marrocos', CA: 'Canadá',
+      ZA: 'África do Sul', DZ: 'Argélia', NG: 'Nigéria', NL: 'Países Baixos',
+      PE: 'Peru', PL: 'Polônia', BE: 'Bélgica', TN: 'Tunísia',
+      ID: 'Indonésia', AU: 'Austrália', CL: 'Chile', PH: 'Filipinas',
+      IL: 'Israel', BD: 'Bangladesh', CZ: 'Tchéquia', SY: 'Síria',
+      YE: 'Iêmen', OM: 'Omã', CH: 'Suíça', LY: 'Líbia',
+      SE: 'Suécia', IR: 'Irã', HK: 'Hong Kong', KW: 'Kuwait',
+      KZ: 'Cazaquistão', JO: 'Jordânia', BO: 'Bolívia', SG: 'Singapura',
+      QA: 'Catar', IE: 'Irlanda', PK: 'Paquistão', RO: 'Romênia',
+      CM: 'Camarões', AT: 'Áustria', FI: 'Finlândia', DK: 'Dinamarca',
+      LB: 'Líbano', GR: 'Grécia', HU: 'Hungria', GT: 'Guatemala',
+      GH: 'Gana', CR: 'Costa Rica', VE: 'Venezuela', NO: 'Noruega',
+      AE: 'Emirados', UY: 'Uruguai', TH: 'Tailândia', PA: 'Panamá',
+      PS: 'Palestina', EC: 'Equador', UA: 'Ucrânia', BH: 'Bahrein',
+      TW: 'Taiwan', KE: 'Quênia', NZ: 'Nova Zelândia', VN: 'Vietnã',
+      RS: 'Sérvia', HR: 'Croácia', KR: 'Coreia do Sul', AL: 'Albânia',
+      SK: 'Eslováquia', DO: 'Rep. Dominicana', PR: 'Porto Rico', UG: 'Uganda',
+      AZ: 'Azerbaijão', LU: 'Luxemburgo', CY: 'Chipre', TZ: 'Tanzânia',
+      AO: 'Angola', MD: 'Moldávia', SN: 'Senegal', LV: 'Letônia',
+      SI: 'Eslovênia', ET: 'Etiópia', IS: 'Islândia', ZW: 'Zimbábue',
+      MK: 'Macedônia', MM: 'Mianmar', GE: 'Geórgia', JM: 'Jamaica',
+      NA: 'Namíbia', HT: 'Haiti', BG: 'Bulgária', KH: 'Camboja',
+      BW: 'Botsuana', MN: 'Mongólia', BI: 'Burundi', LS: 'Lesoto',
+      TG: 'Togo', FJ: 'Fiji', MV: 'Maldivas', SL: 'Serra Leoa',
+      LR: 'Libéria', GW: 'Guiné-Bissau', GQ: 'Guiné Equatorial',
+      CF: 'Rep. Centro-Africana', TD: 'Chade', SO: 'Somália',
+      DJ: 'Djibuti', MR: 'Mauritânia', ML: 'Mali', BF: 'Burkina Faso',
+      CG: 'Congo', CD: 'Rep. Democrática do Congo',
+      NE: 'Níger', RW: 'Ruanda', ZM: 'Zâmbia', MW: 'Malawi',
+      LC: "Santa Lúcia", VC: 'São Vicente e Granadinas', BB: 'Barbados',
+      CI: 'Costa do Marfim', MU: 'Maurício', GY: 'Guiana', SR: 'Suriname',
+      MZ: 'Moçambique', AF: 'Afeganistão', AM: 'Armênia', BY: 'Bielorrússia',
+      UZ: 'Uzbequistão', KG: 'Quirguistão', TJ: 'Tajiquistão', TM: 'Turcomenistão',
+      NP: 'Nepal', BT: 'Butão', LK: 'Sri Lanka', LA: 'Laos', BN: 'Brunei',
+      TL: 'Timor-Leste', PG: 'Papua-Nova Guiné', CV: 'Cabo Verde',
+      ST: 'São Tomé e Príncipe', KM: 'Comores', SC: 'Seicheles', MY: 'Malásia',
+      PY: 'Paraguai', TT: 'Trinidad e Tobago', MT: 'Malta'
     };
     return map[code.toUpperCase()] || code.toUpperCase();
   };
@@ -192,7 +192,7 @@ useEffect(() => {
                   transition={{ loop: true, duration: 40000 }}
                   style={globalStyles.smoke2}
                 />
-                <Sparkle size={60} color="#FFF" weight="fill" />
+                <SparkleIcon size={60} color="#FFF" weight="fill" />
               </MotiView>
 
               <Text style={globalStyles.title}>Quem é você?</Text>
@@ -201,7 +201,7 @@ useEffect(() => {
 
             {/* INPUT MÍSTICO */}
             <View style={globalStyles.inputContainer}>
-              <User size={24} color="#EDE9FF" />
+              <UserIcon size={24} color="#EDE9FF" />
               <TextInput
                 placeholder="Qual é o teu nome, viajante?"
                 placeholderTextColor="#E9D5FF"
@@ -255,7 +255,7 @@ useEffect(() => {
                   {/* IDADE */}
                   {result.age && (
                     <View style={globalStyles.oracleCard}>
-                      <CalendarDots size={32} color="#D8B4FE" weight="bold" />
+                      <CalendarDotsIcon size={32} color="#D8B4FE" weight="bold" />
                       <Text style={globalStyles.oracleText}>
                         Vejo que você já viveu cerca de <Text style={globalStyles.highlight}>{result.age}</Text> invernos nesta terra...
                       </Text>
@@ -265,7 +265,7 @@ useEffect(() => {
                   {/* GÊNERO */}
                   {result.gender && (
                     <View style={globalStyles.oracleCard}>
-                      <GenderIntersex size={32} color="#F472B6" weight="bold" />
+                      <GenderIntersexIcon size={32} color="#F472B6" weight="bold" />
                       <Text style={globalStyles.oracleText}>
                         Sua alma carrega a energia do gênero <Text style={globalStyles.highlight}>
                           {result.gender === 'male' ? 'masculino' : 'feminino'}
@@ -278,7 +278,7 @@ useEffect(() => {
                   {/* PAÍSES */}
                   {result.country && result.country.length > 0 && (
                     <View style={globalStyles.oracleCard}>
-                      <GlobeHemisphereWest size={32} color="#6EE7B7" weight="bold" />
+                      <GlobeHemisphereWestIcon size={32} color="#6EE7B7" weight="bold" />
                       <Text style={globalStyles.oracleText}>
                         Seu nome ecoa com força em terras distantes... especialmente em:
                       </Text>

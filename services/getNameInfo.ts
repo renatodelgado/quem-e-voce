@@ -1,4 +1,3 @@
-// services/getNameInfo.ts
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 
@@ -47,7 +46,7 @@ export async function getNameInfo(name: string): Promise<any | null> {
       data: result,
       timestamp: Date.now()
     };
-    
+
     // Limita cache a 200 nomes
     const keys = Object.keys(newCache);
     if (keys.length > 200) {
@@ -66,12 +65,12 @@ export async function getNameInfo(name: string): Promise<any | null> {
       const cached = await AsyncStorage.getItem(CACHE_KEY);
       if (cached) {
         const cache = JSON.parse((await AsyncStorage.getItem('name_cache')) || '{}');
-cache[normalizedName] = cache[normalizedName] || null;
+        cache[normalizedName] = cache[normalizedName] || null;
         if (cache[normalizedName]) {
           console.log('Usando cache antigo para:', name);
           return cache[normalizedName].data;
         }
-await AsyncStorage.setItem('name_cache', JSON.stringify(cache));
+        await AsyncStorage.setItem('name_cache', JSON.stringify(cache));
       }
     }
     console.log('Erro na API:', error.message);

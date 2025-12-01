@@ -1,4 +1,3 @@
-// screens/Historico.tsx
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFocusEffect, useRouter } from 'expo-router';
@@ -22,7 +21,7 @@ export default function Historico() {
           } else {
             setHistory([]);
           }
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (e) {
           setHistory([]);
         }
@@ -46,10 +45,9 @@ export default function Historico() {
   };
 
   const reuseName = (name: string) => {
-    // FORÇA UMA NOVA INSTÂNCIA DA TELA HOME COM PARAMS LIMPOS
     router.replace({
       pathname: '/',
-      params: { selectedName: name, timestamp: Date.now() } // timestamp força nova renderização
+      params: { selectedName: name, timestamp: Date.now() }
     });
   };
 
