@@ -45,6 +45,7 @@ Abaixo estão os espaços reservados:
 ### Home
 <img src="./screenshots/home.jpg" width="300" />
 
+### Home com resultados
 <img src="./screenshots/home_output.jpg" width="300" />
 
 ### Histórico de Pesquisas
