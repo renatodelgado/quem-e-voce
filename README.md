@@ -39,9 +39,6 @@ root/
 
 # Preview do App
 
-Coloque suas capturas de tela na pasta `/screenshots/`.
-Abaixo estão os espaços reservados:
-
 ### Home
 <img src="./screenshots/home.jpg" width="300" />
 
